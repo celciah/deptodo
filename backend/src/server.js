@@ -92,6 +92,15 @@ app.delete("/delete-task/:id", async (req, res) => {
 app.get("/",(req,res)=>{
     res.send("<h1>Hello</h1>");
 })
+app.get("/tasks", async (req, res) => {
+    try {
+        const tasks = await TaskModel.find();
+        res.json(tasks);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Start Server
 app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs)); // ✅ use 'swaggerDocs'
 
