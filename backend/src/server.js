@@ -66,7 +66,9 @@ app.delete("/delete-task/:id", async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
+app.get("/",(req,res)=>{
+    res.send("<h1>Hello</h1>");
+})
 // Start Server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
