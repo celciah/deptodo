@@ -8,8 +8,6 @@ app.use(express.json());
 app.use(cors());
 const swaggerUI = require("swagger-ui-express");
 const swaggerJSDoc = require("swagger-jsdoc");
-
-const app = express();
 app.use(express.json());
 app.use(cors());
 
@@ -28,7 +26,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./*.js"], // or adjust to your file path if needed
+  apis: ["./src/*.js"], // or adjust to your file path if needed
 };
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
@@ -95,7 +93,8 @@ app.get("/",(req,res)=>{
     res.send("<h1>Hello</h1>");
 })
 // Start Server
-app.use("/docs",swaggerUI.serve,swaggerUI.setup(swaggerJSDocs))
+app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs)); // ✅ use 'swaggerDocs'
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`🚀 Server is running on port ${PORT}`);
