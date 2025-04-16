@@ -27,7 +27,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "https://deptodo-9.onrender.com",
+        url: "${process.env.REACT_APP_BACKEND_URL}",
       },
     ],
   },

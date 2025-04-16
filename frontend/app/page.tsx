@@ -17,7 +17,7 @@ export default function Home() {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/tasks");
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/tasks`);
       setTasks(response.data);
     } catch (error) {
       console.error("Error fetching tasks:", error);
@@ -30,10 +30,10 @@ export default function Home() {
     try {
       if (editingTaskId !== null) {
         // Update existing task
-        await axios.put(`http://localhost:3001/update-task/${editingTaskId}`, { task, date });
+        await axios.put(`${process.env.REACT_APP_BACKEND_URL}/update-task/${editingTaskId}`, { task, date });
       } else {
         // Add new task
-        await axios.post("http://localhost:3001/add-task", { task, date, completed: false });
+        await axios.post("${process.env.REACT_APP_BACKEND_URL}/add-task", { task, date, completed: false });
       }
       setTask("");
       setDate(null);
@@ -52,7 +52,7 @@ export default function Home() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/delete-task/${id}`);
+      await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/delete-task/${id}`);
       fetchTasks();
     } catch (error) {
       console.error("Error deleting task:", error);
@@ -61,7 +61,7 @@ export default function Home() {
 
   const handleDone = async (id, completed) => {
     try {
-      await axios.put(`http://localhost:3001/update-task/${id}`, { completed: !completed });
+      await axios.put(`${process.env.REACT_APP_BACKEND_URL}/update-task/${id}`, { completed: !completed });
       fetchTasks();
     } catch (error) {
       console.error("Error updating task status:", error);
