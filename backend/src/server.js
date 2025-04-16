@@ -5,7 +5,13 @@ require("dotenv").config();
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+const cors = require("cors");
+app.use(cors({
+  origin: "*", // or specify your frontend URL: "https://your-frontend-domain.com"
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
 const swaggerUI = require("swagger-ui-express");
 const swaggerJSDoc = require("swagger-jsdoc");
 app.use(express.json());
@@ -22,7 +28,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "http://localhost:3001",
+        url: "https://deptodo-9.onrender.com",
       },
     ],
   },
