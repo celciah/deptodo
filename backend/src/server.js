@@ -26,7 +26,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./src/*.js"], // or adjust to your file path if needed
+  apis: ["./server.js"], // or adjust to your file path if needed
 };
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions);
@@ -100,6 +100,122 @@ app.get("/tasks", async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+/**
+ * @swagger
+ * /add-task:
+ *   post:
+ *     summary: Add a new task
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               task:
+ *                 type: string
+ *               date:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Task added successfully
+ */
+app.post("/add-task", async (req, res) => {
+  try {
+    const newTask = new TaskModel(req.body);
+    await newTask.save();
+    res.json({ message: "Task added successfully", task: newTask });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * @swagger
+ * /tasks:
+ *   get:
+ *     summary: Get all tasks
+ *     responses:
+ *       200:
+ *         description: A list of tasks
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ */
+app.get("/tasks", async (req, res) => {
+  try {
+    const tasks = await TaskModel.find();
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * @swagger
+ * /update-task/{id}:
+ *   put:
+ *     summary: Update a task
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Task updated successfully
+ */
+app.put("/update-task/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedTask = await TaskModel.findByIdAndUpdate(id, req.body, { new: true });
+    res.json({ message: "Task updated successfully", task: updatedTask });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * @swagger
+ * /delete-task/{id}:
+ *   delete:
+ *     summary: Delete a task
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Task deleted successfully
+ */
+app.delete("/delete-task/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await TaskModel.findByIdAndDelete(id);
+    res.json({ message: "Task deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/", (req, res) => {
+  res.send("<h1>Hello</h1>");
+});
+
+
 
 // Start Server
 app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs)); // ✅ use 'swaggerDocs'
